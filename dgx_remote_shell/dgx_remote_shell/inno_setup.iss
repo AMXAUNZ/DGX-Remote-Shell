@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "DGX Remote Shell"
-#define MyAppVersion "v0.0.1"
+#define MyAppVersion "v0.0.2"
 #define MyAppPublisher "ItsMagic Software"
 #define MyAppURL "http://www.ornear.com/dgx_rs"
 #define MyAppExeName "DGX_Remote_Shell.exe"
