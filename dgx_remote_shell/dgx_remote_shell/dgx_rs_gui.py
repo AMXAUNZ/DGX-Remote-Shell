@@ -130,6 +130,7 @@ class DGXRSFrame ( wx.Frame ):
 		self.Centre( wx.BOTH )
 		
 		# Connect Events
+		self.Bind( wx.EVT_RIGHT_DCLICK, self.on_clear )
 		self.dgx_command_txt.Bind( wx.EVT_TEXT_ENTER, self.on_submit )
 		self.m_button2.Bind( wx.EVT_BUTTON, self.on_submit )
 		self.m_button3.Bind( wx.EVT_BUTTON, self.on_quick_button )
@@ -138,6 +139,9 @@ class DGXRSFrame ( wx.Frame ):
 		self.m_button6.Bind( wx.EVT_BUTTON, self.on_quick_button )
 		self.m_button7.Bind( wx.EVT_BUTTON, self.on_quick_button )
 		self.m_button8.Bind( wx.EVT_BUTTON, self.on_quick_button )
+		self.display_txt.Bind( wx.EVT_RIGHT_DCLICK, self.on_clear )
+		self.display_txt.Bind( wx.EVT_RIGHT_DOWN, self.on_clear )
+		self.display_txt.Bind( wx.EVT_RIGHT_UP, self.on_clear )
 		self.m_button10.Bind( wx.EVT_BUTTON, self.on_apply )
 		self.m_button9.Bind( wx.EVT_BUTTON, self.on_clear )
 	
@@ -146,6 +150,9 @@ class DGXRSFrame ( wx.Frame ):
 	
 	
 	# Virtual event handlers, overide them in your derived class
+	def on_clear( self, event ):
+		event.Skip()
+	
 	def on_submit( self, event ):
 		event.Skip()
 	
@@ -158,10 +165,11 @@ class DGXRSFrame ( wx.Frame ):
 	
 	
 	
+	
+	
+	
 	def on_apply( self, event ):
 		event.Skip()
 	
-	def on_clear( self, event ):
-		event.Skip()
 	
 

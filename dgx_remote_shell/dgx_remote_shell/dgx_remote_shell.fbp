@@ -82,7 +82,7 @@
             <event name="OnMouseEvents"></event>
             <event name="OnMouseWheel"></event>
             <event name="OnPaint"></event>
-            <event name="OnRightDClick"></event>
+            <event name="OnRightDClick">on_clear</event>
             <event name="OnRightDown"></event>
             <event name="OnRightUp"></event>
             <event name="OnSetFocus"></event>
@@ -1311,9 +1311,9 @@
                                             <event name="OnMouseEvents"></event>
                                             <event name="OnMouseWheel"></event>
                                             <event name="OnPaint"></event>
-                                            <event name="OnRightDClick"></event>
-                                            <event name="OnRightDown"></event>
-                                            <event name="OnRightUp"></event>
+                                            <event name="OnRightDClick">on_clear</event>
+                                            <event name="OnRightDown">on_clear</event>
+                                            <event name="OnRightUp">on_clear</event>
                                             <event name="OnSetFocus"></event>
                                             <event name="OnSize"></event>
                                             <event name="OnText"></event>

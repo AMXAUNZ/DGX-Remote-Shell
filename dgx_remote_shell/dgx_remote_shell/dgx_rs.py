@@ -14,11 +14,11 @@ class DGXRSFrame(dgx_rs_gui.DGXRSFrame):
         self.SetIcons(icon_bundle)
         self.display_txt.SetValue(
             'Please connect Netlinx Studio to the DGX you would like to ' +
-
             'query. \r\rTurn on device notifications for device 5002, ' +
             'port 3, and the DGX\'s system number. \rOnly enable \'Commands ' +
             'From Device\'. \r\rEnsure the DGX IP above is correct and then ' +
             'select one of the predefined commands or enter your own.')
+        self.display_txt.Enable(False)
 
     def establish_telnet(self, ip_address, tel_port=23):
         """Creates the telnet instance"""
@@ -33,22 +33,31 @@ class DGXRSFrame(dgx_rs_gui.DGXRSFrame):
 
     def send_command(self, command):
         """Sends a command to the master"""
-        feedback = ''
-        telnet_session = self.establish_telnet(self.dgx_ip_txt.GetValue())
-        feedback = feedback + telnet_session.read_until('>')
-        telnet_session.write('send_command 5002:3:0, \"$03, \'' +
-                             str(command) + '\',13,10\"\r')
-        feedback = feedback + telnet_session.read_until('>')
-        telnet_session.close()
+        try:
+            feedback = ''
+            telnet_session = self.establish_telnet(self.dgx_ip_txt.GetValue())
+            feedback = feedback + telnet_session.read_until('>')
+            telnet_session.write('send_command 5002:3:0, \"$03, \'' +
+                                 str(command) + '\',13,10\"\r')
+            feedback = feedback + telnet_session.read_until('>')
+            telnet_session.close()
+        except Exception as error:
+            self.display_txt.SetValue(
+                'Error: ' + str(error))
+            return
         self.display_txt.SetValue(
             feedback + '\r' +
             'In about 3 seconds, when the notifications show up in ' +
             'Netlinx Studio notifications. \rPlease copy these ' +
-            'notifications and paste them here.\rThen click Process.')
+            'notifications and paste them here.\r\r Press Clear to paste\r' +
+            'Then click Process.\r')
+        self.display_txt.Enable(False)
 
     def on_clear(self, event):
         """Clears the window"""
         self.display_txt.SetValue('')
+        self.display_txt.Enable(True)
+        event.Skip()
 
     def on_quick_button(self, event):
         """Send command from button event"""
