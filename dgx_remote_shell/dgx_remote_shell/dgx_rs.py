@@ -10,11 +10,54 @@ class DGXRSFrame(dgx_rs_gui.DGXRSFrame):
         self.parent = parent
         self.version = 'v0.0.1'
         self.dgx_system = '5002:3:0'
+        self.display_txt.SetValue(
+            'Please connect Netlinx Studio to the DGX you would like to ' +
+
+            'query. \r\rTurn on device notifications for device 5002, ' +
+            'port 3, and the DGX\'s system number. \rOnly enable Commands ' +
+            'From Device. \r\rEnsure the DGX IP above is correct and then ' +
+            'select one of the predefined commands or enter your own.')
+
+    def establish_telnet(self, ip_address, tel_port=23):
+        """Creates the telnet instance"""
+        telnet_session = telnetlib.Telnet(ip_address, tel_port, 5)
+        telnet_session.set_option_negotiation_callback(self.call_back)
+        return telnet_session
+
+    def call_back(self, sock, cmd, opt):
+        """ Turns on server side echoing"""
+        if opt == telnetlib.ECHO and cmd in (telnetlib.WILL, telnetlib.WONT):
+            sock.sendall(telnetlib.IAC + telnetlib.DO + telnetlib.ECHO)
+
+    def send_command(self, command):
+        """Sends a command to the master"""
+        feedback = ''
+        telnet_session = self.establish_telnet(self.dgx_ip_txt.GetValue())
+        feedback = feedback + telnet_session.read_until('>')
+        telnet_session.write('send_command 5002:3:0, \"$03, \'' +
+                             str(command) + '\',13,10\"\r')
+        feedback = feedback + telnet_session.read_until('>')
+        telnet_session.close()
+        self.display_txt.SetValue(
+            feedback + '\r' +
+            'In about 3 seconds, when the notifications show up in ' +
+            'Netlinx Studio notifications. \rPlease copy these ' +
+            'notifications and paste them here.\rThen click Process.')
+
+    def on_clear(self, event):
+        """Clears the window"""
+        self.display_txt.SetValue('')
+
+    def on_quick_button(self, event):
+        """Send command from button event"""
+        command = event.GetEventObject().GetLabel()
+        self.send_command(command.lower())
 
     def on_submit(self, event):
         """Get the DGX command """
         command = self.dgx_command_txt.GetValue()
-        
+        self.dgx_command_txt.SetValue('')
+        self.send_command(command)
 
     def on_apply(self, event):
         """process text"""
