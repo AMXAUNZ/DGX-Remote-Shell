@@ -9,13 +9,15 @@ class DGXRSFrame(dgx_rs_gui.DGXRSFrame):
 
         self.parent = parent
         self.version = 'v0.0.1'
-        self.dgx_system = '5002:3:0'
+        icon_bundle = wx.IconBundle()
+        icon_bundle.AddIconFromFile(r"icon/dgx_rs.ico", wx.BITMAP_TYPE_ANY)
+        self.SetIcons(icon_bundle)
         self.display_txt.SetValue(
             'Please connect Netlinx Studio to the DGX you would like to ' +
 
             'query. \r\rTurn on device notifications for device 5002, ' +
-            'port 3, and the DGX\'s system number. \rOnly enable Commands ' +
-            'From Device. \r\rEnsure the DGX IP above is correct and then ' +
+            'port 3, and the DGX\'s system number. \rOnly enable \'Commands ' +
+            'From Device\'. \r\rEnsure the DGX IP above is correct and then ' +
             'select one of the predefined commands or enter your own.')
 
     def establish_telnet(self, ip_address, tel_port=23):
