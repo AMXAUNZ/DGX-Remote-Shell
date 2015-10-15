@@ -70,7 +70,7 @@ class DGXRSFrame(dgx_rs_gui.DGXRSFrame):
     def on_command_button(self, event):
         """Send command from button event"""
         command = event.GetEventObject().GetLabel()
-        self.send_command(command.lower(), cmd_type='DGS Shell>')
+        self.send_command(command.lower(), cmd_type='DGX Shell>')
 
     def on_bcs_button(self, event):
         """Send bcs from button event"""
