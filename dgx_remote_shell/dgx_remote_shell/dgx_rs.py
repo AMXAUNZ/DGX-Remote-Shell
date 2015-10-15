@@ -113,6 +113,19 @@ class DGXRSFrame(dgx_rs_gui.DGXRSFrame):
             output = output.replace(item[0], item[1])
         return output
 
+    def on_save(self, event):
+        """Save the results"""
+        dlg = wx.FileDialog(
+                self,
+                message='Select file to save',
+                defaultFile="",
+                wildcard="TXT files (*.txt)|*.txt",
+                style=wx.SAVE)
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            with open(path, 'w') as f:
+                f.write(self.display_txt.GetValue())
+
 
 def main():
     """Launch the main program"""
