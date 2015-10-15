@@ -8,7 +8,7 @@ class DGXRSFrame(dgx_rs_gui.DGXRSFrame):
         dgx_rs_gui.DGXRSFrame.__init__(self, parent)
 
         self.parent = parent
-        self.version = 'v0.0.2'
+        self.version = 'v0.0.3'
         icon_bundle = wx.IconBundle()
         icon_bundle.AddIconFromFile(r"icon/dgx_rs.ico", wx.BITMAP_TYPE_ANY)
         self.SetIcons(icon_bundle)
