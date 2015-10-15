@@ -8,7 +8,7 @@ class DGXRSFrame(dgx_rs_gui.DGXRSFrame):
         dgx_rs_gui.DGXRSFrame.__init__(self, parent)
 
         self.parent = parent
-        self.version = 'v0.0.2'
+        self.version = 'v0.0.3'
         icon_bundle = wx.IconBundle()
         icon_bundle.AddIconFromFile(r"icon/dgx_rs.ico", wx.BITMAP_TYPE_ANY)
         self.SetIcons(icon_bundle)
@@ -31,20 +31,28 @@ class DGXRSFrame(dgx_rs_gui.DGXRSFrame):
         if opt == telnetlib.ECHO and cmd in (telnetlib.WILL, telnetlib.WONT):
             sock.sendall(telnetlib.IAC + telnetlib.DO + telnetlib.ECHO)
 
-    def send_command(self, command):
+    def send_command(self, command, cmd_type='DGX Shell>'):
         """Sends a command to the master"""
         try:
             feedback = ''
             telnet_session = self.establish_telnet(self.dgx_ip_txt.GetValue())
             feedback = feedback + telnet_session.read_until('>')
-            telnet_session.write('send_command 5002:3:0, \"$03, \'' +
-                                 str(command) + '\',13,10\"\r')
+            if cmd_type == 'DGX Shell>':
+                telnet_session.write('send_command 5002:3:0, \"$03, \'' +
+                                     str(command) + '\',13,10\"\r')
+            else:
+                telnet_session.write('send_command 5002:3:0, \"\'' +
+                                     str(command) + '\'\"\r')
             feedback = feedback + telnet_session.read_until('>')
             telnet_session.close()
         except Exception as error:
             self.display_txt.SetValue(
                 'Error: ' + str(error))
             return
+        self.show_process_directions(feedback)
+
+    def show_process_directions(self, feedback):
+        """Tell them how to do it"""
         self.display_txt.SetValue(
             feedback + '\r' +
             'In about 3 seconds, when the notifications show up in ' +
@@ -59,16 +67,21 @@ class DGXRSFrame(dgx_rs_gui.DGXRSFrame):
         self.display_txt.Enable(True)
         event.Skip()
 
-    def on_quick_button(self, event):
+    def on_command_button(self, event):
         """Send command from button event"""
         command = event.GetEventObject().GetLabel()
-        self.send_command(command.lower())
+        self.send_command(command.lower(), cmd_type='DGS Shell>')
+
+    def on_bcs_button(self, event):
+        """Send bcs from button event"""
+        command = event.GetEventObject().GetLabel()
+        self.send_command(command.lower(), cmd_type='BCS>')
 
     def on_submit(self, event):
         """Get the DGX command """
         command = self.dgx_command_txt.GetValue()
         self.dgx_command_txt.SetValue('')
-        self.send_command(command)
+        self.send_command(command, self.type_cmb.GetValue())
 
     def on_apply(self, event):
         """process text"""

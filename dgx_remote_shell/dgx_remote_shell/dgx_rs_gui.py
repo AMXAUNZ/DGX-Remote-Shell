@@ -36,7 +36,7 @@ class DGXRSFrame ( wx.Frame ):
 		self.m_staticText3.Wrap( -1 )
 		bSizer9.Add( self.m_staticText3, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.dgx_ip_txt = wx.TextCtrl( self.m_panel1, wx.ID_ANY, u"192.168.7.47", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.dgx_ip_txt = wx.TextCtrl( self.m_panel1, wx.ID_ANY, u"192.168.7.40", wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer9.Add( self.dgx_ip_txt, 0, wx.ALL, 5 )
 		
 		
@@ -51,8 +51,15 @@ class DGXRSFrame ( wx.Frame ):
 		
 		bSizer8 = wx.BoxSizer( wx.HORIZONTAL )
 		
+		type_cmbChoices = [ u"DGX Shell>", u"BCS>" ]
+		self.type_cmb = wx.ComboBox( self.m_panel1, wx.ID_ANY, u"BCS>", wx.DefaultPosition, wx.DefaultSize, type_cmbChoices, 0 )
+		self.type_cmb.SetSelection( 0 )
+		bSizer8.Add( self.type_cmb, 0, wx.ALL, 5 )
+		
 		self.m_staticText2 = wx.StaticText( self.m_panel1, wx.ID_ANY, u"DGX_Shell>", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText2.Wrap( -1 )
+		self.m_staticText2.Hide()
+		
 		bSizer8.Add( self.m_staticText2, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		self.dgx_command_txt = wx.TextCtrl( self.m_panel1, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_PROCESS_ENTER )
@@ -67,25 +74,53 @@ class DGXRSFrame ( wx.Frame ):
 		
 		sbSizer3.Add( bSizer6, 1, wx.EXPAND, 5 )
 		
-		bSizer7 = wx.BoxSizer( wx.HORIZONTAL )
+		bSizer7 = wx.BoxSizer( wx.VERTICAL )
+		
+		bSizer10 = wx.BoxSizer( wx.HORIZONTAL )
 		
 		self.m_button3 = wx.Button( self.m_panel1, wx.ID_ANY, u"Show", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer7.Add( self.m_button3, 0, wx.ALL, 5 )
+		bSizer10.Add( self.m_button3, 0, wx.ALL, 5 )
 		
 		self.m_button4 = wx.Button( self.m_panel1, wx.ID_ANY, u"Channel", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer7.Add( self.m_button4, 0, wx.ALL, 5 )
+		bSizer10.Add( self.m_button4, 0, wx.ALL, 5 )
 		
 		self.m_button5 = wx.Button( self.m_panel1, wx.ID_ANY, u"Show Stats", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer7.Add( self.m_button5, 0, wx.ALL, 5 )
+		bSizer10.Add( self.m_button5, 0, wx.ALL, 5 )
 		
 		self.m_button6 = wx.Button( self.m_panel1, wx.ID_ANY, u"Power", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer7.Add( self.m_button6, 0, wx.ALL, 5 )
+		bSizer10.Add( self.m_button6, 0, wx.ALL, 5 )
 		
 		self.m_button7 = wx.Button( self.m_panel1, wx.ID_ANY, u"Show AIE", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer7.Add( self.m_button7, 0, wx.ALL, 5 )
+		bSizer10.Add( self.m_button7, 0, wx.ALL, 5 )
 		
 		self.m_button8 = wx.Button( self.m_panel1, wx.ID_ANY, u"Switch", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer7.Add( self.m_button8, 0, wx.ALL, 5 )
+		bSizer10.Add( self.m_button8, 0, wx.ALL, 5 )
+		
+		
+		bSizer7.Add( bSizer10, 1, wx.EXPAND, 5 )
+		
+		bSizer11 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.m_button11 = wx.Button( self.m_panel1, wx.ID_ANY, u"~scr1v3!", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer11.Add( self.m_button11, 0, wx.ALL, 5 )
+		
+		self.m_button12 = wx.Button( self.m_panel1, wx.ID_ANY, u"~scr4v3!", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer11.Add( self.m_button12, 0, wx.ALL, 5 )
+		
+		self.m_button13 = wx.Button( self.m_panel1, wx.ID_ANY, u"~scr5v3!", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer11.Add( self.m_button13, 0, wx.ALL, 5 )
+		
+		self.m_button14 = wx.Button( self.m_panel1, wx.ID_ANY, u"~scr6v3!", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer11.Add( self.m_button14, 0, wx.ALL, 5 )
+		
+		self.m_button15 = wx.Button( self.m_panel1, wx.ID_ANY, u"~scr7v3!", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer11.Add( self.m_button15, 0, wx.ALL, 5 )
+		
+		self.m_button16 = wx.Button( self.m_panel1, wx.ID_ANY, u"~scr9v3!", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer11.Add( self.m_button16, 0, wx.ALL, 5 )
+		
+		
+		bSizer7.Add( bSizer11, 1, wx.EXPAND, 5 )
 		
 		
 		sbSizer3.Add( bSizer7, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
@@ -133,15 +168,18 @@ class DGXRSFrame ( wx.Frame ):
 		self.Bind( wx.EVT_RIGHT_DCLICK, self.on_clear )
 		self.dgx_command_txt.Bind( wx.EVT_TEXT_ENTER, self.on_submit )
 		self.m_button2.Bind( wx.EVT_BUTTON, self.on_submit )
-		self.m_button3.Bind( wx.EVT_BUTTON, self.on_quick_button )
-		self.m_button4.Bind( wx.EVT_BUTTON, self.on_quick_button )
-		self.m_button5.Bind( wx.EVT_BUTTON, self.on_quick_button )
-		self.m_button6.Bind( wx.EVT_BUTTON, self.on_quick_button )
-		self.m_button7.Bind( wx.EVT_BUTTON, self.on_quick_button )
-		self.m_button8.Bind( wx.EVT_BUTTON, self.on_quick_button )
-		self.display_txt.Bind( wx.EVT_RIGHT_DCLICK, self.on_clear )
-		self.display_txt.Bind( wx.EVT_RIGHT_DOWN, self.on_clear )
-		self.display_txt.Bind( wx.EVT_RIGHT_UP, self.on_clear )
+		self.m_button3.Bind( wx.EVT_BUTTON, self.on_command_button )
+		self.m_button4.Bind( wx.EVT_BUTTON, self.on_command_button )
+		self.m_button5.Bind( wx.EVT_BUTTON, self.on_command_button )
+		self.m_button6.Bind( wx.EVT_BUTTON, self.on_command_button )
+		self.m_button7.Bind( wx.EVT_BUTTON, self.on_command_button )
+		self.m_button8.Bind( wx.EVT_BUTTON, self.on_command_button )
+		self.m_button11.Bind( wx.EVT_BUTTON, self.on_bcs_button )
+		self.m_button12.Bind( wx.EVT_BUTTON, self.on_bcs_button )
+		self.m_button13.Bind( wx.EVT_BUTTON, self.on_bcs_button )
+		self.m_button14.Bind( wx.EVT_BUTTON, self.on_bcs_button )
+		self.m_button15.Bind( wx.EVT_BUTTON, self.on_bcs_button )
+		self.m_button16.Bind( wx.EVT_BUTTON, self.on_bcs_button )
 		self.m_button10.Bind( wx.EVT_BUTTON, self.on_apply )
 		self.m_button9.Bind( wx.EVT_BUTTON, self.on_clear )
 	
@@ -157,11 +195,16 @@ class DGXRSFrame ( wx.Frame ):
 		event.Skip()
 	
 	
-	def on_quick_button( self, event ):
+	def on_command_button( self, event ):
 		event.Skip()
 	
 	
 	
+	
+	
+	
+	def on_bcs_button( self, event ):
+		event.Skip()
 	
 	
 	
