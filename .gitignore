@@ -2,3 +2,4 @@ dgx_remote_shell/dgx_remote_shell/dist/
 dgx_remote_shell/dgx_remote_shell/build/dgx_rs/dgx_rs.exe.manifest
 dgx_remote_shell/dgx_remote_shell/build/
 *.pyc
+dgx_remote_shell/dgx_remote_shell/output/

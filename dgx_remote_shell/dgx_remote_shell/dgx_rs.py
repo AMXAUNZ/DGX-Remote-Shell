@@ -1,6 +1,12 @@
 import wx
 import telnetlib
 import dgx_rs_gui
+from threading import Thread
+import requests
+from bs4 import BeautifulSoup
+from distutils.version import StrictVersion
+import os
+import sys
 
 
 class DGXRSFrame(dgx_rs_gui.DGXRSFrame):
@@ -8,10 +14,11 @@ class DGXRSFrame(dgx_rs_gui.DGXRSFrame):
         dgx_rs_gui.DGXRSFrame.__init__(self, parent)
 
         self.parent = parent
-        self.version = 'v0.0.4'
+        self.version = 'v0.1.1'
         icon_bundle = wx.IconBundle()
         icon_bundle.AddIconFromFile(r"icon/dgx_rs.ico", wx.BITMAP_TYPE_ANY)
         self.SetIcons(icon_bundle)
+        self.SetTitle("DGX Remote Shell " + self.version)
         self.display_txt.SetValue(
             'Please connect Netlinx Studio to the DGX you would like to ' +
             'query. \r\rTurn on device notifications for device 5002, ' +
@@ -19,6 +26,8 @@ class DGXRSFrame(dgx_rs_gui.DGXRSFrame):
             'From Device\'. \r\rEnsure the DGX IP above is correct and then ' +
             'select one of the predefined commands or enter your own.')
         self.display_txt.Enable(False)
+        self.cert_path = self.resource_path('cacert.pem')
+        Thread(target=self.update_check).start()
 
     def establish_telnet(self, ip_address, tel_port=23):
         """Creates the telnet instance"""
@@ -57,7 +66,7 @@ class DGXRSFrame(dgx_rs_gui.DGXRSFrame):
             feedback + '\r' +
             'In about 3 seconds, when the notifications show up in ' +
             'Netlinx Studio notifications. \rPlease copy these ' +
-            'notifications and paste them here.\r\r Press Clear to paste\r' +
+            'notifications and paste them here.\r\rPress Clear to paste\r' +
             'Then click Process.\r')
         self.display_txt.Enable(False)
 
@@ -125,6 +134,105 @@ class DGXRSFrame(dgx_rs_gui.DGXRSFrame):
             path = dlg.GetPath()
             with open(path, 'w') as f:
                 f.write(self.display_txt.GetValue())
+
+    def update_check(self):
+        """Checks on line for updates"""
+        # print 'in update'
+        try:
+            webpage = requests.get(
+              'https://github.com/AMXAUNZ/DGX-Remote-Shell/releases',
+              verify=self.cert_path)
+            # Scrape page for latest version
+            soup = BeautifulSoup(webpage.text)
+            # Get the <div> sections in lable-latest
+            # print 'divs'
+            divs = soup.find_all("div", class_="release label-latest")
+            # Get the 'href' of the release
+            url_path = divs[0].find_all('a')[-3].get('href')
+            # Get the 'verison' number
+            online_version = url_path.split('/')[-2][1:]
+            if StrictVersion(online_version) > StrictVersion(self.version[1:]):
+                # Try update
+                # print 'try update'
+                self.do_update(url_path, online_version)
+            else:
+                # All up to date pass
+                # print 'up to date'
+                return
+        except Exception as error:
+            # print 'error'error
+            # we have had a problem, maybe update will work next time.
+            # print 'error ', error
+            pass
+
+    def do_update(self, url_path, online_version):
+        """download and install"""
+        # ask if they want to update
+        dlg = wx.MessageDialog(
+                parent=self,
+                message='A new DGX Remote Shell is available v' +
+                        str(StrictVersion(online_version)) + '\r' +
+                        'Do you want to download and update?',
+                        caption='Do you want to update?',
+                        style=wx.OK | wx.CANCEL)
+        if dlg.ShowModal() == wx.ID_OK:
+            response = requests.get('https://github.com' + url_path,
+                                    verify=self.cert_path, stream=True)
+            # print response
+            if not response.ok:
+                return
+            total_length = response.headers.get('content-length')
+            if total_length is None:  # no content length header
+                pass
+            else:
+                total_length = int(total_length)
+                dlg2 = wx.ProgressDialog(
+                    "Download Progress",
+                    "Downloading update now",
+                    maximum=total_length,
+                    parent=self,
+                    style=wx.PD_APP_MODAL |
+                    wx.PD_AUTO_HIDE |
+                    wx.PD_CAN_ABORT |
+                    wx.PD_ELAPSED_TIME)
+                temp_folder = os.environ.get('temp')
+                with open(temp_folder +
+                          '\DGX_Remote_Shell_Setup_' +
+                          str(StrictVersion(online_version)) +
+                          '.exe', 'wb') as handle:
+
+                    count = 0
+                    for data in response.iter_content(1024):
+                        count += len(data)
+                        handle.write(data)
+                        (cancel, skip) = dlg2.Update(count)
+                        if not cancel:
+                            break
+
+            dlg2.Destroy()
+            if not cancel:
+                return
+            self.install_update(online_version, temp_folder)
+
+    def install_update(self, online_version, temp_folder):
+        """Installs the downloaded update"""
+        dlg = wx.MessageDialog(
+            parent=self,
+            message='Do you want to update to version ' +
+                    str(StrictVersion(online_version)) + ' now?',
+            caption='Update program',
+            style=wx.OK | wx.CANCEL)
+
+        if dlg.ShowModal() == wx.ID_OK:
+            os.startfile(temp_folder +
+                         '\DGX_Remote_Shell_Setup_' +
+                         str(StrictVersion(online_version)) +
+                         '.exe')
+            self.Destroy()
+
+    def resource_path(self, relative):
+        return os.path.join(getattr(sys, '_MEIPASS', os.path.abspath(".")),
+                            relative)
 
 
 def main():
