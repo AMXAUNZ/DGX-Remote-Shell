@@ -22,6 +22,7 @@ def extra_datas(icon):
     return extra_datas
 ###########################################
 a.datas += extra_datas('icon')
+a.datas += extra_datas('store')
 pyz = PYZ(a.pure)
 exe = EXE(pyz,
           a.scripts,

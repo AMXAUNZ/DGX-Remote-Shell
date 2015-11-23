@@ -39,7 +39,7 @@ class DGXRSFrame(dgx_rs_gui.DGXRSFrame):
         dgx_rs_gui.DGXRSFrame.__init__(self, parent)
 
         self.parent = parent
-        self.version = 'v0.1.2'
+        self.version = 'v0.1.1'
         icon_bundle = wx.IconBundle()
         icon_bundle.AddIconFromFile(r"icon/dgx_rs.ico", wx.BITMAP_TYPE_ANY)
         self.SetIcons(icon_bundle)
@@ -51,7 +51,7 @@ class DGXRSFrame(dgx_rs_gui.DGXRSFrame):
             'From Device\'. \r\rEnsure the DGX IP above is correct and then ' +
             'select one of the predefined commands or enter your own.')
         self.display_txt.Enable(False)
-        self.cert_path = self.resource_path('cacert.pem')
+        self.cert_path = self.resource_path('store/cacert.pem')
         Thread(target=self.update_check).start()
 
     def establish_telnet(self, ip_address, tel_port=23):
