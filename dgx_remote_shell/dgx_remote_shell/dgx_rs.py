@@ -8,7 +8,7 @@ class DGXRSFrame(dgx_rs_gui.DGXRSFrame):
         dgx_rs_gui.DGXRSFrame.__init__(self, parent)
 
         self.parent = parent
-        self.version = 'v0.0.3'
+        self.version = 'v0.0.4'
         icon_bundle = wx.IconBundle()
         icon_bundle.AddIconFromFile(r"icon/dgx_rs.ico", wx.BITMAP_TYPE_ANY)
         self.SetIcons(icon_bundle)
@@ -70,7 +70,7 @@ class DGXRSFrame(dgx_rs_gui.DGXRSFrame):
     def on_command_button(self, event):
         """Send command from button event"""
         command = event.GetEventObject().GetLabel()
-        self.send_command(command.lower(), cmd_type='DGS Shell>')
+        self.send_command(command.lower(), cmd_type='DGX Shell>')
 
     def on_bcs_button(self, event):
         """Send bcs from button event"""
@@ -112,6 +112,19 @@ class DGXRSFrame(dgx_rs_gui.DGXRSFrame):
         for item in unwanted:
             output = output.replace(item[0], item[1])
         return output
+
+    def on_save(self, event):
+        """Save the results"""
+        dlg = wx.FileDialog(
+                self,
+                message='Select file to save',
+                defaultFile="",
+                wildcard="TXT files (*.txt)|*.txt",
+                style=wx.SAVE)
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            with open(path, 'w') as f:
+                f.write(self.display_txt.GetValue())
 
 
 def main():

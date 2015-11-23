@@ -133,21 +133,39 @@ class DGXRSFrame ( wx.Frame ):
 		
 		bSizer3 = wx.BoxSizer( wx.VERTICAL )
 		
+		sbSizer31 = wx.StaticBoxSizer( wx.StaticBox( self.m_panel1, wx.ID_ANY, wx.EmptyString ), wx.VERTICAL )
+		
 		self.display_txt = wx.TextCtrl( self.m_panel1, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
 		self.display_txt.SetFont( wx.Font( 9, 75, 90, 90, False, "Courier New" ) )
 		
-		bSizer3.Add( self.display_txt, 1, wx.EXPAND, 5 )
+		sbSizer31.Add( self.display_txt, 1, wx.EXPAND, 5 )
+		
+		
+		bSizer3.Add( sbSizer31, 1, wx.EXPAND|wx.ALL, 5 )
 		
 		bSizer10 = wx.BoxSizer( wx.HORIZONTAL )
 		
+		bSizer12 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.m_button161 = wx.Button( self.m_panel1, wx.ID_ANY, u"Save", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer12.Add( self.m_button161, 0, wx.ALL, 5 )
+		
+		
+		bSizer10.Add( bSizer12, 1, wx.EXPAND, 5 )
+		
+		bSizer13 = wx.BoxSizer( wx.HORIZONTAL )
+		
 		self.m_button10 = wx.Button( self.m_panel1, wx.ID_ANY, u"Process", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer10.Add( self.m_button10, 0, wx.ALL, 5 )
+		bSizer13.Add( self.m_button10, 0, wx.ALL, 5 )
 		
 		self.m_button9 = wx.Button( self.m_panel1, wx.ID_ANY, u"Clear", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer10.Add( self.m_button9, 0, wx.ALL, 5 )
+		bSizer13.Add( self.m_button9, 0, wx.ALL, 5 )
 		
 		
-		bSizer3.Add( bSizer10, 0, wx.ALIGN_RIGHT, 5 )
+		bSizer10.Add( bSizer13, 0, wx.EXPAND, 5 )
+		
+		
+		bSizer3.Add( bSizer10, 0, wx.ALIGN_RIGHT|wx.EXPAND, 5 )
 		
 		
 		bSizer2.Add( bSizer3, 1, wx.EXPAND, 5 )
@@ -180,6 +198,7 @@ class DGXRSFrame ( wx.Frame ):
 		self.m_button14.Bind( wx.EVT_BUTTON, self.on_bcs_button )
 		self.m_button15.Bind( wx.EVT_BUTTON, self.on_bcs_button )
 		self.m_button16.Bind( wx.EVT_BUTTON, self.on_bcs_button )
+		self.m_button161.Bind( wx.EVT_BUTTON, self.on_save )
 		self.m_button10.Bind( wx.EVT_BUTTON, self.on_apply )
 		self.m_button9.Bind( wx.EVT_BUTTON, self.on_clear )
 	
@@ -210,6 +229,9 @@ class DGXRSFrame ( wx.Frame ):
 	
 	
 	
+	
+	def on_save( self, event ):
+		event.Skip()
 	
 	def on_apply( self, event ):
 		event.Skip()
